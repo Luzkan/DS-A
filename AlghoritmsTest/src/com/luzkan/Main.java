@@ -10,17 +10,17 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static String fileName = "resultsSelectionSort";
-    private static String sortedBy = "SelectionSort";
-    private static int repetition = 1;
+    private static String fileName = "resultsMyQuickSort100";
+    private static String sortedBy = "MQuickSort";
+    private static int repetition = 100;
     private static int arraySize = 100;
     private static boolean silent = true;
 
     public static void main(String[] args) throws IOException {
 
-        boolean toFile = false;
+        boolean toFile = true;
         boolean ascending = true;
-        int sort = 1;
+        int sort = 5;
         // 1 - Selection Sort
         // 2 - Insertion Sort
         // 3 - Heap Sort
@@ -236,19 +236,19 @@ public class Main {
     private static void runMQuickSort(boolean ascending, boolean toFile, int[] arrayToSort) throws IOException {
         if(ascending) {
             MQuickSort mqs = new MQuickSort();
-            mqs.sort(arrayToSort, 0, arrayToSort.length - 1);
+            mqs.start(arrayToSort);
             if (!silent) mqs.printArray(arrayToSort);
             if (toFile) usingBufferedWritter(mqs.printInfo());
         }else{
             MQuickSortDesc mqs = new MQuickSortDesc();
-            mqs.sort(arrayToSort, 0, arrayToSort.length - 1);
+            mqs.start(arrayToSort);
             if (!silent) mqs.printArray(arrayToSort);
             if (toFile) usingBufferedWritter(mqs.printInfo());
         }
     }
 
     private static void usingBufferedWritter(String toWrite) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("D:\\Samorozwój\\Studia\\Semestr 4 WPPT Inf\\AiSD\\Lista2\\" + fileName + ".txt", true));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("D:\\Samorozwój\\Studia\\Semestr 4 WPPT Inf\\AiSD\\AlghoritmsTest\\" + fileName + ".txt", true));
         writer.write(sortedBy + "\t" + arraySize + "\t" + toWrite + "\n");
         writer.close();
     }

@@ -125,7 +125,7 @@ class MQuickSort {
     /* A utility function to print array of size n */
     void printArray(int[] arr) {
         for (int value : arr) System.out.print(value + " ");
-        System.out.println("\n>Comparisions: " + comparision + "\n>Swaps: " + swaps + "\n>Time Elapsed: " + (finish-start)/1000000 + "ms.");
+        System.out.println("\n>Comparisions: " + comparision + "\n>Swaps: " + swaps + "\n>Time Elapsed: " + (finish-start) + "ns.");
     }
 
     String printInfo() {
