@@ -1,0 +1,119 @@
+// Code Below is another working example
+// I made it purelly because of small boolean mistake
+// In Main I was passing undirected graph instead od directed
+// and was wondering why SCC isn't working
+// So I proceed to remake code for... a bit of time...
+
+// And no..., I'm feeling only >slightly< depressed about this...
+// ¯\_(ツ)_/¯
+
+package com.luzkan;
+
+// https://www.geeksforgeeks.org/strongly-connected-components/
+
+import java.util.*;
+
+// This class represents a directed graph using adjacency list representation
+class SCC {
+    private Graph graph;
+    private LinkedList<Integer> adj[];
+
+    SCC(Graph graph) {
+        this.graph = graph;
+        adj = new LinkedList[graph.getV()];
+        for (int i=0; i<graph.getV(); ++i)
+            adj[i] = new LinkedList();
+        fillAdj();
+    }
+
+    private void fillAdj(){
+        for (int v = 0; v < graph.getV(); v++) {
+            // Recur for all the vertices adjacent to this vertex
+            for (Edge edge : graph.getVertices().get(v)) {
+                System.out.println("[DEBUG]: v = " + v + ", edge.getV() = " + edge.getV() + ", edge.getU() = " + edge.getU());
+                adj[v].add(edge.getV());
+            }
+        }
+    }
+
+    // A recursive function to print DFS starting from v
+    private void DFSUtil(int v, boolean[] visited) {
+        // Mark the current node as visited and print it
+        visited[v] = true;
+        System.out.print(v + " ");
+
+        // Recur for all the vertices adjacent to this vertex
+        int n;
+        Iterator<Integer> i = adj[v].iterator();
+        while (i.hasNext()){
+            n = i.next();
+            if (!visited[n])
+                DFSUtil(n, visited);
+        }
+    }
+
+    // Function that returns reverse (or transpose) of this graph
+    private SCC getTranspose() {
+        Graph g = new Graph(graph.getV());
+        SCC scc = new SCC(g);
+
+        for (int v = 0; v < graph.getV(); v++) {
+            // Recur for all the vertices adjacent to this vertex
+            Iterator<Integer> i = adj[v].listIterator();
+            while(i.hasNext())
+                scc.adj[i.next()].add(v);
+        }
+        return scc;
+    }
+
+    private void fillOrder(int v, boolean[] visited, Stack stack) {
+        // Mark the current node as visited and print it
+        visited[v] = true;
+
+        // Recur for all the vertices adjacent to this vertex
+        Iterator<Integer> i = adj[v].iterator();
+        while (i.hasNext()) {
+            int n = i.next();
+            if(!visited[n])
+                fillOrder(n, visited, stack);
+        }
+
+        // All vertices reachable from v are processed by now, push v to Stack
+        stack.push(new Integer(v));
+    }
+
+    // The main function that finds and prints all strongly
+    // connected components
+    void runMode() {
+        Stack stack = new Stack();
+
+        // Mark all the vertices as not visited (For first DFS)
+        boolean[] visited = new boolean[graph.getV()];
+        for (int i = 0; i < graph.getV(); i++)
+            visited[i] = false;
+
+        // Fill vertices in stack according to their finishing times
+        for (int i = 0; i < graph.getV(); i++)
+            if (!visited[i])
+                fillOrder(i, visited, stack);
+
+        // Create a reversed graph
+        SCC gr = getTranspose();
+
+        // Mark all the vertices as not visited (For second DFS)
+        for (int i = 0; i < graph.getV(); i++)
+            visited[i] = false;
+
+        // Now process all vertices in order defined by Stack
+        while (!stack.empty()) {
+            // Pop a vertex from stack
+            int v = (int) stack.pop();
+
+            // Print Strongly connected component of the popped vertex
+            if (!visited[v]) {
+                gr.DFSUtil(v, visited);
+                System.out.println();
+            }
+        }
+    }
+}
